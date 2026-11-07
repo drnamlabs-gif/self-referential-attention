@@ -1,0 +1,255 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage{amsmath,amssymb,empheq}
+\usepackage{graphicx,booktabs,caption,enumitem,xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!45!black]{hyperref}
+\captionsetup{font=small,labelfont=bf}
+\definecolor{boxbg}{HTML}{F4F6F8}\definecolor{warnbg}{HTML}{FFF3CD}\definecolor{keybg}{HTML}{E4EFE4}
+\newcommand{\yn}[1]{\par\vspace{1.5mm}\noindent\colorbox{boxbg}{\parbox{0.965\textwidth}{\vspace{1.2mm}#1\vspace{1.2mm}}}\vspace{1.5mm}}
+\newcommand{\warn}[1]{\par\vspace{1.5mm}\noindent\colorbox{warnbg}{\parbox{0.965\textwidth}{\vspace{1.2mm}#1\vspace{1.2mm}}}\vspace{1.5mm}}
+\newcommand{\key}[1]{\par\vspace{1.5mm}\noindent\colorbox{keybg}{\parbox{0.965\textwidth}{\vspace{1.2mm}#1\vspace{1.2mm}}}\vspace{1.5mm}}
+
+\title{\textbf{Đề cương viết lại}\\[2mm]
+\Large Bộ nhớ liên tưởng dày học từ attractor của chính nó:\\
+trôi từ đặc trưng sang nguyên mẫu\\[2mm]
+\large \normalfont Thiết kế thí nghiệm, đối chứng, và tiêu chí bác bỏ ghi trước}
+\author{}\date{}
+
+\begin{document}\maketitle\vspace{-8mm}
+
+\begin{abstract}\noindent
+Krotov \& Hopfield (2016) chỉ ra rằng số mũ tách bạch $n$ quyết định một mạng DAM
+học ra \emph{đặc trưng} (nét) hay \emph{nguyên mẫu} (chữ số nguyên vẹn) --- một
+vị trí \emph{tĩnh} trên một trục, do siêu tham số đặt, với dữ liệu cố định. Đề
+cương này đặt câu hỏi mà setting đó không thể hỏi: điều gì xảy ra khi \emph{dữ
+liệu chính là đầu ra của mạng}? Giả thuyết trung tâm: bộ ký ức khi đó
+\textbf{trôi} dọc đúng trục ấy, luôn về phía nguyên mẫu, và $n$ chỉ quyết định
+\emph{tốc độ}, không quyết định \emph{đích}. Hệ quả: năng lực là một \emph{giai
+đoạn quá độ}, tăng khi bộ ký ức còn ở vùng đặc trưng và giảm khi nó ngưng tụ.
+Chúng tôi đã đo được đúng hình dạng đó trên một hệ spin $150$ biến, nơi biết
+được đáp án đúng; đề cương này chuyển nó sang MNIST --- benchmark của chính
+Krotov --- với bốn đối chứng và tiêu chí bác bỏ ghi trước khi chạy.
+\end{abstract}
+
+%======================================================================
+\section{Ghi rõ: cái gì đã có, cái gì là của ta}
+
+\subsection{Đã có (không phải đóng góp)}
+
+\begin{enumerate}[leftmargin=7mm,itemsep=1mm]
+\item \textbf{DAM và dung lượng.} Krotov \& Hopfield (2016): năng lượng
+$E=-\sum_\mu F(\langle\xi^\mu,v\rangle)$ với $F(x)=\max(x,0)^n$ cho dung lượng
+$\sim N^{n-1}$, mũ khi $F=\exp$.
+\item \textbf{Chuyển tiếp đặc trưng $\to$ nguyên mẫu.} Cùng bài, trên MNIST:
+$n$ thấp thì ký ức học được trông như \emph{nét}; $n$ cao thì trông như
+\emph{chữ số nguyên vẹn}. Đây là trục khái niệm mà đề cương này dùng.
+\item \textbf{Attention là truy hồi Hopfield hiện đại.} Ramsauer et al.\ (2020):
+năng lượng log-sum-exp cho luật cập nhật đúng bằng softmax attention.
+\item \textbf{Tự mô hình hoá cải thiện tối ưu hoá.} Watson, Buckley \& Mills
+(2011): mạng Hopfield học Hebb trên attractor của chính nó giải bài ràng buộc
+tốt hơn.
+\end{enumerate}
+
+\warn{\textbf{Phải nói thẳng.} Đánh đổi ``trừu tượng hoá đổi lấy đa dạng theo
+$n$'' mà chúng tôi đo được \textbf{chính là} chuyển tiếp đặc trưng--nguyên mẫu
+của Krotov, đo trong hoàn cảnh khác. Bản thân nó \emph{không mới}, và không được
+trình bày như thể mới.}
+
+\subsection{Cầu nối là một đồng nhất thức}
+
+Lấy self-modeling: các ``ký ức'' $\xi^\mu$ là chính các attractor mà hệ tìm ra.
+Với $F(x)=x^2$,
+\begin{equation}
+\sum_\mu \langle\xi^\mu,s\rangle^2
+\;=\; s^{\!\top}\Big(\sum_\mu \xi^\mu\xi^{\mu\top}\Big)s
+\;=\; s^{\!\top}\Delta W s ,
+\end{equation}
+đúng bằng luật Hebb của Watson. Nên
+\begin{empheq}[box=\fbox]{equation}
+\text{tự mô hình hoá (Watson 2011)} \;=\; \text{DAM tự quy chiếu tại } n=2 .
+\end{empheq}
+Không phải ẩn dụ. M1 là \emph{một điểm} trên trục của Krotov, và câu hỏi ``ngoài
+điểm đó thì sao'' là câu hỏi chưa ai đặt.
+
+\subsection{Giả thuyết trung tâm --- cái mới}
+
+\key{\textbf{H.} Trong DAM có giám sát, dữ liệu cố định, nên $n$ quyết định mạng
+\emph{ngồi ở đâu} trên trục đặc trưng--nguyên mẫu, và vị trí đó \emph{tĩnh}. Khi
+DAM học từ attractor của chính nó, dữ liệu \emph{là} đầu ra của mô hình, nên hệ
+\textbf{di chuyển} dọc trục --- luôn về phía nguyên mẫu --- và $n$ chỉ đặt
+\emph{tốc độ}, không đặt \emph{đích}.\\[1.5mm]
+\textbf{Hệ quả H'.} Năng lực là giai đoạn quá độ: tăng khi bộ ký ức còn ở vùng
+đặc trưng, đạt đỉnh, rồi giảm khi ngưng tụ.}
+
+Điều này \emph{không thể} nghiên cứu trong setting có giám sát, vì ở đó MNIST
+không đổi. Vòng phản hồi đơn giản là không tồn tại.
+
+%======================================================================
+\section{Bằng chứng sơ bộ đã có}
+
+Trên bài ràng buộc modular $N=150$ ($30$ module $\times\,5$ unit), nơi
+\emph{biết được} lời giải tối ưu ($-483{,}3$) và sàn tìm kiếm cá thể ($-419{,}5$):
+
+\begin{table}[h]\centering\small
+\begin{tabular}{rrrrr}
+\toprule
+$n$ & lợi ích học được & trừu tượng hoá (đỉnh) & đa dạng cuối & hạng hiệu dụng\\
+\midrule
+$2$  & $\mathbf{60}$ & $\mathbf{2{,}23}$ & $\mathbf{1}$ & $290$\\
+$6$  & $57$ & $1{,}75$ & $2$ & $259$\\
+$10$ & $37$ & $1{,}39$ & $15$ & $94$\\
+$20$ & $17$ & $1{,}13$ & $\mathbf{34}$ & $\mathbf{4{,}4}$\\
+\bottomrule
+\end{tabular}
+\caption{Ba cột đối nghịch đơn điệu. Trên toàn bộ $60$ cấu hình $(n,\gamma)$:
+$\mathrm{corr}(\text{đa dạng giữ được},\ \text{năng lượng cuối}) = +0{,}809$ ---
+giữ được đa dạng thì lời giải tệ đi.}
+\end{table}
+
+Và tại $n=2$, quỹ đạo có đúng hình dạng H' dự đoán: trừu tượng hoá lên đỉnh
+$2{,}23$ rồi rã về $1{,}03$; đa dạng attractor $46\to1$; $\Delta W$ về
+\emph{hạng một} ($\lambda_1/\sum\lambda=0{,}50$,
+$\cos(\Delta W,ss^{\!\top})=0{,}90$), tức dung lượng hiệu dụng bằng $1$ trong
+khi Hopfield cổ điển đáng lẽ chứa $\approx 21$.
+
+\yn{Đây là bằng chứng \emph{gợi ý}, không phải kết quả: một instance bài toán,
+một họ seed, và ``trừu tượng hoá'' đo bằng \emph{một} proxy. Nó biện minh cho
+việc làm thí nghiệm, không thay thế thí nghiệm.}
+
+%======================================================================
+\section{Thiết kế thí nghiệm trên MNIST}
+
+\subsection{Hệ}
+
+Ma trận ký ức $\Xi\in\mathbb{R}^{K\times 784}$, năng lượng
+$E(v) = -\sum_{\mu=1}^{K} F\big(\langle\xi^\mu,v\rangle/\sqrt{N}\big)$,
+$F(x)=\max(x,0)^n$. Truy hồi bằng động lực giảm năng lượng.
+
+\textbf{Vòng tự quy chiếu.} Khởi tạo $\Xi$ từ $K$ ảnh MNIST thật --- tức
+\emph{bắt đầu ở vùng đặc trưng/dữ liệu}. Mỗi vòng: lấy một truy vấn (ảnh MNIST
+nhiễu), thả về attractor $a_t$, rồi \emph{thay} một ký ức bằng $a_t$. Lặp.
+
+\subsection{Đo gì}
+
+\begin{enumerate}[leftmargin=7mm,itemsep=1mm]
+\item \textbf{Vị trí trên trục đặc trưng--nguyên mẫu.} Với mỗi ký ức $\xi^\mu$,
+lấy profile tương quan $c_i=\mathrm{corr}(\xi^\mu,x_i)$ với toàn bộ ảnh huấn
+luyện, rồi tính
+\begin{equation}
+\mathrm{PR}(\xi^\mu) \;=\; \frac{\big(\sum_i c_i^+\big)^2}{\sum_i (c_i^+)^2},
+\qquad c^+=\max(c,0).
+\end{equation}
+$\mathrm{PR}$ thấp $=$ ký ức giải thích \emph{một} ảnh $=$ nguyên mẫu;
+$\mathrm{PR}$ cao $=$ giải thích \emph{nhiều} ảnh $=$ đặc trưng. Đây là lượng
+hoá trực tiếp trục của Krotov.
+\item \textbf{Hạng hiệu dụng} của $\Xi$ (participation ratio của phổ kỳ dị).
+\item \textbf{Đa dạng}: số attractor phân biệt trong cửa sổ trượt.
+\item \textbf{Năng lực}: khử nhiễu trên tập giữ lại --- làm hỏng một chữ số chưa
+thấy, thả, rồi chấm bằng \emph{một bộ phân loại ngoài cố định}. Chấm luôn trên
+nhãn thật, không bao giờ trên năng lượng của mô hình.
+\item \textbf{Hình ảnh}: hiện chính các ký ức theo thời gian. Nếu H đúng, ở
+$n=2$ ta phải \emph{nhìn thấy} chúng nhoè dần về một vệt trung bình.
+\end{enumerate}
+
+\subsection{Đối chứng --- phần đã hỏng ở lần trước}
+
+\warn{Đây là mục quan trọng nhất của đề cương. Lần trước (ABDAM) thất bại đúng ở
+đây: một thống kê tổng hợp bị hiểu sai, và cơ chế được tuyên bố không có đối
+chứng loại trừ lời giải thích tầm thường. Bốn đối chứng dưới đây phải chạy
+\emph{cùng lúc} với thí nghiệm chính, không phải bổ sung sau.}
+
+\begin{description}[leftmargin=6mm,style=nextline]
+\item[C1 --- không tự quy chiếu (null).] Mỗi vòng thay ký ức bằng một ảnh MNIST
+\emph{thật}, không phải attractor. \emph{Phải không trôi.} Nếu nó cũng trôi thì
+hiện tượng không liên quan gì tới tự quy chiếu.
+\item[C2 --- đổi siêu tham số đơn thuần.] Bất kỳ hiệu ứng nào quan sát được,
+kiểm xem một thay đổi đơn giản của $n$ hoặc thang năng lượng có tái tạo được
+không. \emph{Bài học $\beta$}: nếu ``cơ chế'' tương đương một phép đổi thang thì
+nó không phải cơ chế.
+\item[C3 --- lưu trữ ngẫu nhiên.] Thay ký ức bằng \emph{vector ngẫu nhiên} cùng
+chuẩn. Tách ``lưu bất cứ thứ gì'' khỏi ``lưu đầu ra của chính mình''. (Trên hệ
+spin, đối chứng tương ứng đã cho kết quả quyết định: nhiễu đối xứng ngẫu nhiên
+pha loãng $1{,}00\to0{,}77$ và \emph{không} cải thiện gì, trong khi Hebb thật
+$1{,}00\to0{,}11$ và cải thiện $66$ đơn vị.)
+\item[C4 --- có neo.] $\Xi \leftarrow (1-\alpha)\Xi_0 + \alpha\Xi + \text{mới}$.
+Phải trôi \emph{chậm hơn}, đơn điệu theo $\alpha$.
+\end{description}
+
+\subsection{Quy tắc tự vệ, rút từ lần hỏng trước}
+
+\begin{enumerate}[leftmargin=7mm,itemsep=1mm]
+\item \textbf{Mọi thống kê tổng hợp phải kiểm hiện vật.} Trước khi diễn giải một
+chỉ số bất bình đẳng, tính giá trị của nó cho phân bố \emph{tầm thường} tương
+ứng. (Gini của ``$k$ ô bằng nhau $+$ $m$ ô rỗng'' là $1-k/(k+m)$ --- nếu số đo
+trùng con số đó thì nó không đo tự tổ chức.)
+\item \textbf{Chạy quá đỉnh.} Không dừng ở epoch mà hiệu năng tốt nhất. Chạy
+ít nhất $5\times$ thời gian tới đỉnh, để thấy phần sau.
+\item \textbf{Nhiều seed và nhiều tập con dữ liệu}, báo cáo sai số chuẩn. Một
+instance không phải kết quả.
+\item \textbf{Chấm trên đại lượng ngoài.} Không bao giờ dùng năng lượng của
+chính mô hình làm thước đo năng lực.
+\end{enumerate}
+
+%======================================================================
+\section{Tiêu chí bác bỏ --- ghi TRƯỚC khi chạy}
+
+\warn{\begin{itemize}[nosep,leftmargin=6mm]
+\item \textbf{H chết} nếu $\mathrm{PR}$ trung bình \emph{không} giảm đơn điệu
+theo vòng ở bất kỳ $n$ nào trong $\{2,4,10,20\}$; hoặc nếu nó giảm ở $n$ thấp
+nhưng \emph{tăng} ở $n$ cao (khi đó $n$ quyết định đích, không chỉ tốc độ).
+\item \textbf{H chết} nếu C3 (lưu ngẫu nhiên) cho độ trôi bằng thí nghiệm chính
+trong sai số $20\%$ --- khi đó tự quy chiếu không đóng vai trò gì.
+\item \textbf{H chết} nếu C1 (dữ liệu thật) cũng trôi.
+\item \textbf{H' chết} nếu năng lực khử nhiễu đơn điệu (chỉ tăng, hoặc chỉ
+giảm), không có đỉnh, trên $\ge 3/4$ số $n$.
+\item \textbf{Đóng góp bị hạ cấp} nếu mọi hiệu ứng tái tạo được bằng C2.
+\end{itemize}
+Nếu H chết mà H' sống, vẫn còn một bài (cửa sổ năng lực trong DAM, đo trên
+benchmark của Krotov). Nếu cả hai chết thì dừng và không viết gì.}
+
+%======================================================================
+\section{Chi phí và rủi ro}
+
+\textbf{Chi phí.} MNIST $784$ chiều, $K\sim100$ ký ức, mỗi vòng là vài phép nhân
+ma trận. Hàng nghìn vòng trong vài phút trên CPU. Toàn bộ lưới
+$n\times\alpha\times$ seed nằm trong vài giờ. \emph{Không cần GPU.}
+
+\textbf{Rủi ro, xếp theo mức độ nghiêm trọng.}
+\begin{enumerate}[leftmargin=7mm,itemsep=1.5mm]
+\item \textbf{Hiện tượng có thể tầm thường.} Lưu attractor của chính mình thì
+attractor được củng cố --- có thể ai cũng thấy ngay. Phản biện: nếu tầm thường
+thì tự mô hình hoá của Watson đã không hoạt động; nội dung định lượng nằm ở
+\emph{cửa sổ}, ở biên của nó, và ở việc $n$ điều khiển tốc độ chứ không điều
+khiển đích. Nhưng phải trình bày cho đúng tầm.
+\item \textbf{Thước đo $\mathrm{PR}$ có thể không sạch.} Cần kiểm trên các
+trường hợp đã biết (ảnh thật $\Rightarrow$ PR thấp; ảnh trung bình $\Rightarrow$
+PR cao) trước khi tin.
+\item \textbf{Có thể đã có người làm.} Tìm kiếm sơ bộ không thấy ``DAM học từ
+attractor của chính nó'', nhưng chưa vét hết; phải đọc kỹ mảng động lực học của
+DAM (ví dụ arXiv:2506.00851) trước khi tuyên bố tính mới.
+\item \textbf{Quy mô.} MNIST với $n$ cao có thể quá dễ, giống như bài toán spin
+tự tầm thường hoá khi module lớn. Cần kiểm độ khó trước: nếu khử nhiễu đạt trần
+ngay từ vòng đầu thì không có chỗ cho cửa sổ xuất hiện.
+\end{enumerate}
+
+%======================================================================
+\section{Việc cần làm, theo thứ tự}
+
+\begin{enumerate}[leftmargin=7mm,itemsep=1mm]
+\item Kiểm thước đo $\mathrm{PR}$ trên các trường hợp đã biết. Vài phút.
+Không qua thì dừng.
+\item Kiểm độ khó: khử nhiễu có trần không, có chỗ cho cải thiện không.
+\item Thí nghiệm chính $+$ bốn đối chứng, chạy đồng thời, $n\in\{2,4,10,20\}$,
+$\ge 5$ seed, chạy quá đỉnh $5\times$.
+\item Chỉ khi (3) qua tiêu chí bác bỏ mới viết.
+\end{enumerate}
+
+\vspace{3mm}
+\noindent\rule{\textwidth}{0.4pt}\\[1mm]
+{\small Bằng chứng sơ bộ: \texttt{dam\_selfmodel.py}, \texttt{run\_dam\_sweep.py},
+\texttt{data/dam\_sweep.npz}. Hệ spin: $N=150$, $30\times5$, $p=0{,}8$, chấm trên
+$A$ với đường chéo bằng không.}
+
+\end{document}

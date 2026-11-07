@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+*.aux
+*.log
+*.out
+*.spl
+# large or regenerable data
+data/mnist.npz
+data/mnist_snaps/
+data/llm_bank/

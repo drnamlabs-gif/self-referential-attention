@@ -1,0 +1,7 @@
+numpy
+scipy
+matplotlib
+torch
+transformers
+# optional, only for check_hopfield_layer.py:
+# hflayers  (pip install git+https://github.com/ml-jku/hopfield-layers)
