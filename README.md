@@ -14,6 +14,12 @@ pattern separation sets only the speed of the collapse, never its endpoint.
 
 ![self-reference flattens the landscape](figures_mhn/energy_flattening.png)
 
+
+**Follow-up (`pre/`).** How much outside information per write keeps such a
+memory diverse? With a fraction `alpha` of fresh writes, the loss of
+diversity becomes a first-order consensus transition with a mean-field
+theory. Code, stored results and figures are in [`pre/`](pre/README.md).
+
 ## Layout
 
 | Path | What it is |
